@@ -44,6 +44,14 @@ if !exists('g:butter_split_options')
     let g:butter_split_options = ''
 endif
 
+" Internal functions
+
+function! ButterTermCmd(cmd) abort
+    if &buftype ==# 'terminal'
+        exec a:cmd
+    endif
+endfunction
+
 " Settings
 
 augroup ButterSettings
@@ -51,14 +59,14 @@ augroup ButterSettings
     if g:butter_settings && exists('##TerminalOpen')
         " numbers look bad in the terminal, disable them
         if g:butter_settings_norelativenumber
-            au TerminalOpen * setlocal norelativenumber
+            au TerminalOpen * call ButterTermCmd('setlocal norelativenumber')
         endif
         if g:butter_settings_nonumber
-            au TerminalOpen * setlocal nonumber
+            au TerminalOpen * call ButterTermCmd('setlocal nonumber')
         endif
         if g:butter_settings_nobuflisted
             " do not include the terminal buffer in lists
-            au TerminalOpen * setlocal nobuflisted
+            au TerminalOpen * call ButterTermCmd('setlocal nobuflisted')
         endif
     endif
 augroup END
