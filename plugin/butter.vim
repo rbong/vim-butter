@@ -102,7 +102,9 @@ augroup END
 function! butter#popup()
     wincmd b
     if exists('b:is_butter_terminal')
-        normal! a
+        if mode() !=# 't'
+            normal! a
+        endif
     else
         exec 'bot term '.g:butter_popup_options
         doautocmd User ButterPopupOpen
