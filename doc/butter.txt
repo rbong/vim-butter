@@ -52,6 +52,16 @@ Defaults to 1.
 Set 'nobuflisted' in terminals.
 Defaults to 1.
 
+*g:butter_neovim_compatibility*
+
+Whether to add settings and mappings that make the Neovim terminal act closer to Vim.
+Defaults to 1.
+
+*g:butter_neovim_compatibility_mappings*
+
+Whether to add mappings that make the Neovim terminal act closer to Vim.
+Defaults to 1.
+
 *g:butter_fixes*
 
 Enable or disable all fixes that butter currently adds to the terminal.
@@ -80,10 +90,15 @@ Calls |:AirlineRefresh| when switching buffers.
 Sometimes airline fails to update when a terminal is open.
 Defaults to 1.
 
-*g:butter_popup_options*
+*g:butter_popup_cmd*
 
-Options to |:term| when opening a butter popup or splitting the popup.
-Defaults to "++rows=20".
+The command to open in the popup terminal.
+Defaults to "bash".
+
+*g:butter_popup_height*
+
+The height of the popup window.
+Defaults to 20.
 
 *g:butter_split_options*
 
