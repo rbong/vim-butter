@@ -74,6 +74,23 @@ function! ButterTermOpenAutoCmd(cmd) abort
     exec 'au '.l:event.' * '.a:cmd
 endfunction
 
+function! ButterHandleTermClose(event, buf) abort
+    " Don't close non-butter terminals
+    if !getbufvar(a:buf, 'is_butter_terminal')
+        return
+    endif
+    " Don't close window on fail
+    if a:event.status
+        return
+    endif
+    " Close window
+    if bufnr() ==# a:buf
+        close
+    endif
+    " Delete buffer
+    exe 'silent! bdelete! ' . a:buf
+endfunction
+
 " Settings
 
 augroup ButterSettings
@@ -174,7 +191,7 @@ augroup ButterPopupNeovimCompatibility
     autocmd!
     if g:butter_neovim_compatibility
         " autoclose terminal on success
-        au TermClose * if getbufvar(expand('<abuf>'), 'is_butter_terminal') && !v:event.status | exe 'silent! bdelete! '.expand('<abuf>') | endif
+        au TermClose * call ButterHandleTermClose(v:event, expand('<abuf>'))
     endif
 augroup END
 
