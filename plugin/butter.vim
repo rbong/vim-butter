@@ -52,6 +52,10 @@ if !exists('g:butter_popup_height')
     let g:butter_popup_height = 20
 endif
 
+" Global variables
+
+let g:butter_terminals = {}
+
 " Internal functions
 
 function! ButterTermCmd(cmd) abort
@@ -76,9 +80,10 @@ endfunction
 
 function! ButterHandleTermClose(event, buf) abort
     " Don't close non-butter terminals
-    if !getbufvar(a:buf, 'is_butter_terminal')
+    if !get(g:butter_terminals, a:buf)
         return
     endif
+    unlet! g:butter_terminals[a:buf]
     " Don't close window on fail
     if a:event.status
         return
@@ -155,7 +160,7 @@ augroup END
 " start or attach to a terminal on the bottom right
 function! butter#popup()
     wincmd b
-    if exists('b:is_butter_terminal')
+    if get(g:butter_terminals, bufnr())
         if mode() !=# 't'
             normal! a
         endif
@@ -166,21 +171,21 @@ function! butter#popup()
             exec 'bot term ++rows='.g:butter_popup_height.' '.g:butter_popup_cmd
         endif
         doautocmd User ButterPopupOpen
-        let b:is_butter_terminal = 1
+        let g:butter_terminals[bufnr()] = 1
     endif
 endfunction
 
 " split or start a terminal on the bottom right
 function! butter#split()
     wincmd b
-    if exists('b:is_butter_terminal')
+    if get(g:butter_terminals, bufnr())
         if has('nvim')
             exec 'rightb vertical sp term:// '.g:butter_popup_cmd
         else
             exec 'rightb vertical term '.g:butter_popup_cmd
         endif
         doautocmd User ButterPopupOpen
-        let b:is_butter_terminal = 1
+        let g:butter_terminals[bufnr()] = 1
     else
         call butter#popup()
     endif
